@@ -1,0 +1,17 @@
+{
+  "name": "photo-album",
+  "version": "1.0.0",
+  "description": "Web album ảnh tốt nghiệp / sự kiện - Client xem + Admin quản lý",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.33.5",
+    "uuid": "^11.0.3"
+  }
+}

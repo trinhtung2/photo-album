@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Quản lý Album</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+  <div id="login-screen" class="login-screen">
+    <div class="login-box">
+      <h1>🔐 Admin Album</h1>
+      <p>Nhập mật khẩu để quản lý ảnh</p>
+      <input type="password" id="admin-password" placeholder="Mật khẩu admin" />
+      <button id="btn-login">Đăng nhập</button>
+      <p class="hint">Mặc định: <code>admin123</code></p>
+    </div>
+  </div>
+
+  <div id="admin-app" style="display:none">
+    <header class="admin-header">
+      <div class="logo">🛠️ Admin Album</div>
+      <nav>
+        <button class="nav-btn active" data-tab="upload">Đăng ảnh</button>
+        <button class="nav-btn" data-tab="manage">Quản lý ảnh</button>
+        <button class="nav-btn" data-tab="trash">Thùng rác</button>
+        <button class="nav-btn" data-tab="settings">Cài đặt</button>
+        <button class="nav-btn logout" id="btn-logout">Thoát</button>
+      </nav>
+    </header>
+
+    <main class="admin-main">
+      <!-- Tab Đăng ảnh (gộp 3 phần) -->
+      <section id="tab-upload" class="tab active">
+        <h2>Đăng ảnh + Drive + Thông tin</h2>
+
+        <div class="upload-box">
+          <h3 style="margin-bottom:12px">1. Đăng ảnh</h3>
+          <label>Chọn ngày nhóm ảnh (để dễ quản lý):</label>
+          <input type="date" id="date-group" />
+          <label class="file-label">
+            <input type="file" id="file-input" multiple accept="image/*" />
+            <span>📷 Chọn ảnh (có thể chọn nhiều)</span>
+          </label>
+          <div id="preview-list" class="preview-list"></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+            <button id="btn-upload" class="btn-primary" disabled>Đăng ảnh lên</button>
+            <button id="btn-clear-all-preview" class="btn-delete" style="padding:12px 18px;border-radius:8px;display:none">Xóa hết ảnh đã chọn</button>
+          </div>
+          <div id="upload-progress" class="upload-progress" style="display:none">
+            <div class="spinner"></div>
+            <p id="upload-status">Đang tải lên...</p>
+          </div>
+        </div>
+
+        <div class="upload-box" style="margin-top:20px">
+          <h3 style="margin-bottom:12px">2. Link Google Drive</h3>
+          <label>Khách có thể tải thêm từ đây (dán link Drive của bạn):</label>
+          <input type="url" id="drive-link-input" placeholder="https://drive.google.com/..." style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff;margin-bottom:12px" />
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button id="btn-save-drive" class="btn-primary">Lưu / Sửa link Drive</button>
+            <button id="btn-delete-drive" class="btn-delete" style="padding:12px 20px;border-radius:8px">Xóa link Drive</button>
+          </div>
+          <p id="drive-status" style="margin-top:10px"></p>
+        </div>
+
+        <div class="upload-box" style="margin-top:20px">
+          <h3 style="margin-bottom:12px">3. Đăng thông tin / Ghi chú</h3>
+          <label>Nội dung thông tin (hiện ở đầu trang khách):</label>
+          <textarea id="note-content" rows="4" placeholder="Ví dụ: Album tốt nghiệp ngày 15/11. Các bạn tải về thoải mái nhé!" style="width:100%;padding:12px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff;margin-bottom:12px;resize:vertical"></textarea>
+          <button id="btn-add-note" class="btn-primary">Đăng thông tin</button>
+          <div id="notes-list" style="margin-top:20px"></div>
+        </div>
+      </section>
+
+      <!-- Tab Quản lý -->
+      <section id="tab-manage" class="tab">
+        <h2>Quản lý ảnh</h2>
+        <div style="margin-bottom:16px">
+          <button id="btn-delete-all-active" class="btn-delete" style="padding:10px 18px;border-radius:8px">Xóa toàn bộ ảnh đang hiển thị</button>
+        </div>
+        <div id="date-groups" class="date-groups"></div>
+        <div id="manage-gallery" class="manage-gallery"></div>
+      </section>
+
+      <!-- Tab Thùng rác -->
+      <section id="tab-trash" class="tab">
+        <h2>Thùng rác (tự xóa sau 7 ngày nếu không khôi phục)</h2>
+        <div style="margin-bottom:16px">
+          <button id="btn-delete-all-trash" class="btn-delete" style="padding:10px 18px;border-radius:8px">Xóa vĩnh viễn toàn bộ thùng rác</button>
+        </div>
+        <div id="trash-gallery" class="manage-gallery"></div>
+      </section>
+
+      <!-- Tab Cài đặt -->
+      <section id="tab-settings" class="tab">
+        <h2>Cài đặt trang</h2>
+        <div class="settings-box">
+          <h3>Đổi tên trang web</h3>
+          <p style="color:#94a3b8;margin-bottom:12px;font-size:0.9rem">Chỉ được đổi 1 lần trong 7 ngày. Phải nhập lại mật khẩu admin.</p>
+          <label>Tên trang hiện tại:</label>
+          <input type="text" id="current-title" readonly style="width:100%;padding:10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#94a3b8;margin-bottom:12px" />
+          <label>Tên mới:</label>
+          <input type="text" id="new-title" placeholder="Nhập tên mới..." maxlength="60" style="width:100%;padding:10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff;margin-bottom:12px" />
+          <label>Nhập lại mật khẩu admin để xác nhận:</label>
+          <input type="password" id="title-password" placeholder="Mật khẩu admin" style="width:100%;padding:10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff;margin-bottom:12px" />
+          <button id="btn-change-title" class="btn-primary">Đổi tên trang</button>
+          <p id="title-status" style="margin-top:10px"></p>
+        </div>
+        <div class="settings-box">
+          <h3>Thông tin hệ thống</h3>
+          <p>• Ảnh khi đăng được nén để web tải nhanh.</p>
+          <p>• Khi khách tải về (từng ảnh hoặc ZIP) nhận bản gốc chất lượng cao.</p>
+          <p>• Ảnh xóa mềm tự động xóa vĩnh viễn sau 7 ngày.</p>
+          <p>• Trang khách tự cập nhật khi bạn đăng ảnh / sửa thông tin.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

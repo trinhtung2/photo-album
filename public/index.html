@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Album Ảnh</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="logo" id="site-title">📷 Album Ảnh</div>
+    <nav class="menu">
+      <button class="menu-btn active" data-view="grid">Tất cả</button>
+      <button class="menu-btn" data-view="liked">Đã tim</button>
+      <button class="menu-btn" id="btn-download-all">Tải toàn bộ</button>
+      <a id="drive-link" class="menu-btn drive" href="#" target="_blank" style="display:none">Google Drive</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="notes-box" class="notes-box" style="display:none"></div>
+    <div id="photo-count" class="photo-count"></div>
+    <div id="gallery" class="gallery-wrap"></div>
+    <div id="empty" class="empty" style="display:none">
+      <p>Chưa có ảnh nào trong album.</p>
+    </div>
+  </main>
+
+  <!-- Modal xem ảnh lớn -->
+  <div id="modal" class="modal">
+    <button class="modal-close" id="modal-close">×</button>
+    <button class="modal-nav prev" id="modal-prev">‹</button>
+    <button class="modal-nav next" id="modal-next">›</button>
+    <div class="modal-content">
+      <div class="modal-img-wrap">
+        <img id="modal-img" src="" alt="" />
+      </div>
+      <div class="modal-actions">
+        <button id="modal-zoom-out" class="action-btn" title="Thu nhỏ">−</button>
+        <button id="modal-zoom-in" class="action-btn" title="Phóng to">+</button>
+        <button id="modal-like" class="action-btn like-action">♥ <span id="modal-likes">0</span></button>
+        <button id="modal-download" class="action-btn">↓ Tải ảnh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress tải -->
+  <div id="progress-overlay" class="progress-overlay" style="display:none">
+    <div class="progress-box">
+      <div class="spinner"></div>
+      <p id="progress-text">Đang chuẩn bị tải...</p>
+      <div class="progress-bar">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <p id="progress-percent">0%</p>
+    </div>
+  </div>
+
+  <script src="/js/gallery.js"></script>
+</body>
+</html>
